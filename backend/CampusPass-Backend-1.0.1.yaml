@@ -1,0 +1,544 @@
+openapi: 3.0.3
+info:
+  title: CampusPass Backend API - OpenAPI 3.0
+  description: CampusPass Backend API Documentation
+  contact:
+    email: ajaykrishnavemula125@gmail.com
+  version: 1.0.1
+servers:
+  - url: http://localhost:3000/api/v1
+tags:
+  - name: Permit
+    description: Everything about Permit
+  - name: User
+    description: Everything about User
+  - name: System
+    description: Everything about System
+paths:
+  /populate/create:
+    post:
+      tags:
+        - Permit
+      security:
+        - bearerAuth: []
+      summary: Creates a new outpass
+      description: This API  creates a new outpass. This API is consumed by the student component. It requires Student JWT.
+      requestBody:
+        description: creates a new pass
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+                - name
+                - phoneNumber
+                - outTime
+                - inTime
+                - inVerified
+                - outVerified
+                - purpose
+              properties:
+                id:
+                  type: string
+                  example: 2020bcs0066
+                name:
+                  type: string
+                  example: Tharun Vemula
+                phoneNumber:
+                  type: string
+                  example: '6301930763'
+                outTime:
+                  type: string
+                  example: '2023-02-11T18:30:00.000Z'
+                inTime:
+                  type: string
+                  example: '2023-02-11T18:30:00.000Z'
+                inVerified:
+                  type: boolean
+                  example: false
+                outVerified:
+                  type: boolean
+                  example: false
+                purpose:
+                  type: string
+                  example: Pala
+                inApprovedBy:
+                  type: string
+                  example: Security 1
+                outApprovedBy:
+                  type: string
+                  example: Security 1
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Permit'
+  /populate/verify:
+    post:
+      tags:
+        - Permit
+      security:
+        - bearerAuth: []
+      summary: Verifies Outpass at the Security
+      description: In Verification and Out Verification API. This API is consumed by the Security Component. It requries Security JWT
+      requestBody:
+        description: verifies a new pass
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: <ObjectID>
+                type:
+                  type: number
+                  example: 0
+                inApprovedBy:
+                  type: string
+                  example: Security 1
+                outApprovedBy:
+                  type: string
+                  example: Security 1
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Permit'
+        '400':
+          description: Invalid status value
+  /populate/remark:
+    post:
+      tags:
+        - Permit
+      security:
+        - bearerAuth: []
+      summary: Sets remark
+      description: Increments Remarks score by 1.
+      requestBody:
+        description: Increments Remarks score by 1 of a student.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: 2020bcs0066
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        '400':
+          description: Invalid tag value
+  /populate/outgoing:
+    post:
+      tags:
+        - Permit
+      security:
+        - bearerAuth: []
+      summary: Fectches Students from - to date
+      description: Returns an array of Students going out in between dates. This API is consumed by the Security Component. It requires Security JWT
+      requestBody:
+        description: Returns an array of Students going out in between dates
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date:
+                  type: string
+                  example: '2011-10-05T14:48:00.000Z'
+                hostel:
+                  type: string
+                  example: 'h2'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Permit'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Permit not found
+  /auth/login:
+    post:
+      tags:
+        - User
+      security:
+        - bearerAuth: []
+      summary: Authenticates an User
+      description: Returns a payload containing user data
+      requestBody:
+        description: Returns a payload containing user data
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: 2020bcs0066
+                password:
+                  type: string
+                  example: '123456'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                    example: theUser
+                  password:
+                    type: string
+                    example: '12345'
+                  role:
+                    type: number
+                    example: 0
+                xml:
+                  name: user
+  /system:
+    get:
+      tags:
+        - System
+      summary: get status of the system
+      description: Returns the status of the System. It is open API.
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                    example: 34
+                  allow:
+                    type: boolean
+                    example: true
+                  threshold:
+                    type: number
+                    example: 3
+  /admin/system:
+    post:
+      tags:
+        - System
+      security:
+        - bearerAuth: []
+      summary: sets the status of the system.
+      description: Returns the status of the System. Only the admin can consume the API. It requires Admin JWT
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                    example: 34
+                  allow:
+                    type: boolean
+                    example: true
+                  threshold:
+                    type: number
+                    example: 3
+  /populate/profile:
+    get:
+      tags:
+        - User
+      security:
+        - bearerAuth: []
+      summary: get the student details
+      description: Returns the students data. Used for refreshing. This API is consumed by the Student Component. It requires Student JWT.
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Permit'
+                xml:
+                  name: user
+  /populate/allow:
+    get:
+      tags:
+        - User
+      security:
+        - bearerAuth: []
+      summary: get the student status - Internal API
+      description: Internal API to check the status of student. Returns the students data.This API is consumed by the Student Component. It requires Student JWT.
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                xml:
+                  name: user
+  /populate/student/all:
+    post:
+      tags:
+        - User
+      security:
+        - bearerAuth: []
+      summary: get all students under the warden
+      description: fetches students under the warden. This API is consumed by Warden Component. It requires Warden JWT.
+      parameters:
+        - in: path
+          name: hostel
+          schema:
+            type: string
+          required: true
+      requestBody:
+        description: Returns a payload containing user data
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                hostel:
+                  type: string
+                  example: h1
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Student'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Student'
+                xml:
+                  name: user
+  /populate/student/status:
+    post:
+      tags:
+        - User
+      security:
+        - bearerAuth: []
+      summary: Sets status for a student
+      description: Warden can set status to a student. This API is consumed by Warden Component. It requires Warden JWT.
+      requestBody:
+        description: Returns a payload containing user data
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: 2020bcs0066
+                status:
+                  type: boolean
+                  example: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        default:
+          description: successful operation
+  /populate/student/history:
+    post:
+      tags:
+        - User
+      security:
+        - bearerAuth: []
+      summary: gets history of a student
+      description: Warden can view history of a student. This API is consumed by Warden Component. It requires Warden JWT.
+      requestBody:
+        description: Returns a payload containing user data
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: 2020bcs0066
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        default:
+          description: successful operation
+  /populate/location:
+    get:
+      tags:
+        - User
+      security:
+        - bearerAuth: []
+      summary: gets current location of a student
+      description: gets current location of a student . In - 0 / Out - 1. It requires Student JWT.
+      responses:
+        '200':
+          description: Returns an object with only key, status set to either 0 or 1
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 0
+        default:
+          description: successful operation
+components:
+  schemas:
+    Permit:
+      type: object
+      required:
+        - id
+        - name
+        - phoneNumber
+        - outTime
+        - inTime
+        - isInVerified
+        - isOutVerified
+        - purpose
+      properties:
+        id:
+          type: string
+          example: 2020bcs0066
+        name:
+          type: string
+          example: Tharun Vemula
+        phoneNumber:
+          type: string
+          example: '6301930763'
+        outTime:
+          type: string
+          example: '2023-02-11T18:30:00.000Z'
+        verifiedOutTime:
+          type: string
+          example: '2023-02-11T18:30:00.000Z'
+        verifiedInTime:
+          type: string
+          example: '2023-02-11T18:30:00.000Z'
+        inTime:
+          type: string
+          example: '2023-02-11T18:30:00.000Z'
+        isInVerified:
+          type: boolean
+          example: false
+        isOutVerified:
+          type: boolean
+          example: false
+        purpose:
+          type: string
+          example: Pala
+        inApprovedBy:
+          type: string
+          example: Security 1
+        outApprovedBy:
+          type: string
+          example: Security 1
+    User:
+      type: object
+      required:
+        - id
+        - name
+        - password
+        - role
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          example: theUser
+        password:
+          type: string
+          example: '12345'
+        role:
+          type: number
+          example: 0
+      xml:
+        name: user
+    Student:
+      allOf:
+        - ref: '#/components/schema/User'
+        - type: object
+          required:
+            - status
+            - remarkScore
+            - hostel
+            - gender
+            - inCampus
+          properties:
+            status:
+              type: boolean
+              example: true
+            remarkScore:
+              type: number
+              example: 0
+            hostel:
+              type: string
+              example: h2
+            gender:
+              type: string
+              example: male
+            inCampus:
+              type: number
+              example: 0
+    Security:
+      allOf:
+        - ref: '#/components/schema/User'
+        - type: object
+    Warden:
+      allOf:
+        - ref: '#/components/schema/User'
+        - type: object
+          required:
+            - hostel
+          properties:
+            hostel:
+              type: string
+              example: h1
+    System:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 34
+        allow:
+          type: boolean
+          example: true
+        threshold:
+          type: number
+          example: 3

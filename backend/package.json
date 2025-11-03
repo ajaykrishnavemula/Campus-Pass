@@ -1,0 +1,28 @@
+{
+  "name": "CampusPass-Portal",
+  "version": "1.0.0",
+  "description": "Campus Outpass Management System Backend",
+  "main": "index.js",
+  "repository": "https://github.com/ajaykrishna-125/CampusPass",
+  "author": "Ajay Krishna <ajaykrishnavemula125@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "tsc": "tsc",
+    "build": "tsc && node ./dist/src/index.js",
+    "start": "node ./dist/src/index.js"
+  },
+  "dependencies": {
+    "@fastify/cors": "^8.2.0",
+    "@fastify/helmet": "^10.1.0",
+    "@fastify/jwt": "^6.5.0",
+    "@types/bcryptjs": "^2.4.2",
+    "@types/node": "^18.11.18",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.0.3",
+    "fastify": "^4.12.0",
+    "fastify-plugin": "^4.5.0",
+    "mongoose": "^6.8.4",
+    "winston": "^3.8.2",
+    "yarn": "^1.22.19"
+  }
+}
