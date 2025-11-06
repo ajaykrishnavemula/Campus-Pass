@@ -1,4 +1,4 @@
-# CampusPass - Complete API Reference
+# Campus-Pass - Complete API Reference
 
 > **Comprehensive API documentation for the Campus Outpass Management System**
 

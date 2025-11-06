@@ -1,6 +1,6 @@
-# Contributing to CampusPass (CampusPass)
+# Contributing to Campus-Pass (Campus-Pass)
 
-Thank you for your interest in contributing to CampusPass! This document provides guidelines and instructions for contributing to the project.
+Thank you for your interest in contributing to Campus-Pass! This document provides guidelines and instructions for contributing to the project.
 
 ---
 
@@ -65,7 +65,7 @@ Before contributing, ensure you have:
 
 If you're new to open source:
 1. Read the [README.md](README.md) to understand the project
-2. Check out [good first issues](https://github.com/ajaykrishnavemula/CampusPass/labels/good%20first%20issue)
+2. Check out [good first issues](https://github.com/ajaykrishnavemula/Campus-Pass/labels/good%20first%20issue)
 3. Join our community discussions
 4. Ask questions - we're here to help!
 
@@ -80,14 +80,14 @@ Click the "Fork" button at the top right of the repository page.
 ### 2. Clone Your Fork
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/CampusPass.git
-cd CampusPass/backend
+git clone https://github.com/YOUR_USERNAME/Campus-Pass.git
+cd Campus-Pass/backend
 ```
 
 ### 3. Add Upstream Remote
 
 ```bash
-git remote add upstream https://github.com/ajaykrishnavemula/CampusPass.git
+git remote add upstream https://github.com/ajaykrishnavemula/Campus-Pass.git
 ```
 
 ### 4. Install Dependencies
@@ -621,7 +621,7 @@ Before submitting your contribution:
 
 ## 🎉 Thank You!
 
-Thank you for contributing to CampusPass! Your efforts help make this project better for everyone.
+Thank you for contributing to Campus-Pass! Your efforts help make this project better for everyone.
 
 **Questions?** Don't hesitate to ask! We're here to help.
 

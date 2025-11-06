@@ -1,40 +1,26 @@
 /**
- * @author AjayKrishna
- * @summary helper functions used in API Logic
+ * @summary Password hashing utilities using bcrypt
  */
 
-import bcrypt from 'bcryptjs';
-import { FastifyRequest } from 'fastify';
+import bcrypt from 'bcrypt';
 
-export const hashPassword = async (password: string) => {
-  return await bcrypt.hash(password, 10);
-};
+const SALT_ROUNDS = 10;
 
-export const checkPassword = async (
+/**
+ * Hash a password
+ */
+export async function hashPassword(password: string): Promise<string> {
+  return bcrypt.hash(password, SALT_ROUNDS);
+}
+
+/**
+ * Compare password with hash
+ */
+export async function checkPassword(
   password: string,
-  hashedPassword: string,
-) => {
-  return await bcrypt.compare(password, hashedPassword);
-};
+  hash: string
+): Promise<boolean> {
+  return bcrypt.compare(password, hash);
+}
 
-export const getAuthenticationToken = (req: FastifyRequest) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-  return token;
-};
 
-export const getIdFromToken = (req: FastifyRequest) => {
-  const user = decodeToken(req);
-  return user.sub;
-};
-
-export const decodeToken = (req: FastifyRequest) => {
-  const userJson = JSON.stringify(req.user);
-  const user = JSON.parse(userJson);
-  return user;
-};
-
-export const getRoleFromToken = (req: FastifyRequest) => {
-  const user = decodeToken(req);
-  return user.role;
-};

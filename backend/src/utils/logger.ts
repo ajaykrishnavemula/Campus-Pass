@@ -1,79 +1,85 @@
 /**
- * @author AjayKrishna
- * @summary Logger Utility
+ * @summary Logger utility using Winston
  */
 
 import winston from 'winston';
+import path from 'path';
 
-const dateFormat = () => {
-  return new Date(Date.now()).toString();
+// Define log levels
+const levels = {
+  error: 0,
+  warn: 1,
+  info: 2,
+  http: 3,
+  debug: 4,
 };
-class LoggerService {
-  log_data: null;
-  route: string;
-  logger: winston.Logger;
 
-  constructor(route: string) {
-    this.log_data = null;
-    this.route = route;
+// Define log colors
+const colors = {
+  error: 'red',
+  warn: 'yellow',
+  info: 'green',
+  http: 'magenta',
+  debug: 'blue',
+};
 
-    const logger = winston.createLogger({
-      transports: [
-        //new winston.transports.Console(),
-        new winston.transports.File({
-          filename: `./logs/${route}.log`,
-        }),
-      ],
+// Add colors to winston
+winston.addColors(colors);
 
-      format: winston.format.printf((info) => {
-        let message = `${dateFormat()} | ${info.level.toUpperCase()} | ${route}.log | ${
-          info.message
-        } | `;
-        message = info.obj
-          ? message + `data:${JSON.stringify(info.obj)} | `
-          : message;
-        message = this.log_data
-          ? message + `log_data:${JSON.stringify(this.log_data)} | `
-          : message;
-        return message;
-      }),
-    });
-    this.logger = logger;
-  }
-  setLogData(log_data: any) {
-    this.log_data = log_data;
-  }
+// Define log format
+const format = winston.format.combine(
+  winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+  winston.format.errors({ stack: true }),
+  winston.format.splat(),
+  winston.format.json()
+);
 
-  debug(message: string, obj?: any) {
-    if (obj) {
-      this.logger.log('info', message, {
-        obj,
-      });
-    } else {
-      this.logger.log('info', message);
-    }
-  }
+// Define console format for development
+const consoleFormat = winston.format.combine(
+  winston.format.colorize({ all: true }),
+  winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+  winston.format.printf(
+    (info) => `${info.timestamp} ${info.level}: ${info.message}`
+  )
+);
 
-  info(message: string, obj?: any) {
-    if (obj) {
-      this.logger.log('info', message, {
-        obj,
-      });
-    } else {
-      this.logger.log('info', message);
-    }
-  }
+// Define transports
+const transports = [
+  // Console transport
+  new winston.transports.Console({
+    format: consoleFormat,
+  }),
+  
+  // Error log file
+  new winston.transports.File({
+    filename: path.join('logs', 'error.log'),
+    level: 'error',
+    format,
+  }),
+  
+  // Combined log file
+  new winston.transports.File({
+    filename: path.join('logs', 'combined.log'),
+    format,
+  }),
+];
 
-  error(message: any, obj?: any) {
-    if (obj) {
-      this.logger.log('info', message, {
-        obj,
-      });
-    } else {
-      this.logger.log('info', message);
-    }
-  }
-}
+// Create logger instance
+const logger = winston.createLogger({
+  level: process.env.LOG_LEVEL || 'info',
+  levels,
+  format,
+  transports,
+  exitOnError: false,
+});
 
-const logger = new LoggerService('app');
+// Create a stream object for Morgan HTTP logger
+export const stream = {
+  write: (message: string) => {
+    logger.http(message.trim());
+  },
+};
+
 export default logger;
+
+
